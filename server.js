@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const logger = require("morgan");
 const mongoose = require("mongoose");
+const path = require("path"); // built
 
 // Our scraping tools
 // Axios is a promised-based http library, similar to jQuery's Ajax method
@@ -38,59 +39,109 @@ mongoose.connect(MONGODB_URI)
 
 // Routes
 
+app.get("/", function (req, res) {
+  // Static Files
+  // HTML
+  // JavaScript
+  // CSS
+  res.sendFile(path.join(__dirname, "views/index.html"));
+});
+
+
+
+
+// API
+app.get("/articles", function (req, res) {
+
+
+  db.Article.find({}) // promise
+    .then(function (data) {
+      // TODO
+      res.json(data); // json
+
+      // res.json();
+    })
+    .catch(function (err) {
+      // TODO
+      res.json(err);
+    })
+});
+
+
+
+
+// get = url
+  // send a static
+  // build an api
+  // process some information, and send the user somewhere else
+// post
+
+
+
+
+
 // A GET route for scraping the echojs website
-app.get("/scrape", function(req, res) {
+app.get("/scrape", function (req, res) {
   // First, we grab the body of the html with request
-  axios.get("https://aitrends.com/").then(function(response) {
+  axios.get("https://aitrends.com/").then(function (response) {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
     const $ = cheerio.load(response.data);
 
+    var finalResults = []; // {}
     // Now, we grab every h2 within an article tag, and do the following:
-    $("div.item-details").each(function(i, element) {
+    $("div.item-details").each(function (i, element) {
       // Save an empty result object
       const result = {};
 
       // Add the text and href of every link, and save them as properties of the result object
-      result.title = $(this)
-        .children("h3")
-        .children("a")
-        .text();
-      result.link = $(this)
-      .children("h3")
-      .children("a")
-      .attr("href")
 
-      result.summary=$(this)
-        .children("div.td-excerpt")
-        .text();
+      if (result.summary !== "" || result.summary !== undefined) {
+        result.title = $(this)
+          .children("h3")
+          .children("a")
+          .text();
+        result.link = $(this)
+          .children("h3")
+          .children("a")
+          .attr("href")
 
-console.log(result)
-      // Create a new Article using the `result` object built from scraping
-      db.Article.create(result)
-        .then(function(dbArticle) {
-          // View the added result in the console
-          console.log(dbArticle);
-        })
-        .catch(function(err) {
-          // If an error occurred, send it to the client
-          return res.json(err);
-        });
+        result.summary = $(this)
+          .children("div.td-excerpt")
+          .text();
+      }
+
+      finalResults.push(result)
+
     });
 
+
+
+    // Create a new Article using the `result` object built from scraping
+    db.Article.create(finalResults)
+      .then(function (dbArticle) {
+        // View the added result in the console
+        // console.log(dbArticle);
+        res.redirect("/");
+      })
+      .catch(function (err) {
+        // If an error occurred, send it to the client
+        res.json("We not not able to save the articles");
+      });
+
     // If we were able to successfully scrape and save an Article, send a message to the client
-    res.send(result);
+    // res.send(result);
   });
 });
 
 // // Route for getting all Articles from the db
-app.get('/api/headlines?saved=false', function(req, res) {
+app.get('/api/headlines?saved=false', function (req, res) {
   // Grab every document in the Articles collection
   db.Article.find({})
-    .then(function(dbArticle) {
+    .then(function (dbArticle) {
       // If we were able to successfully find Articles, send them back to the client
       res.json(dbArticle);
     })
-    .catch(function(err) {
+    .catch(function (err) {
       // If an error occurred, send it to the client
       res.json(err);
     });
@@ -133,6 +184,15 @@ app.get('/api/headlines?saved=false', function(req, res) {
 // });
 
 // Start the server
-app.listen(PORT, function() {
+app.listen(PORT, function () {
   console.log("App running on port " + PORT + "!");
 });
+
+
+
+
+// Serve our App
+// Microservices
+  // Building API
+  // Not serving a static
+// Some Integrations
