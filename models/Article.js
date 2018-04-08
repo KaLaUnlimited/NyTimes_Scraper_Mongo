@@ -20,6 +20,7 @@ var ArticleSchema = new Schema({
     type:String,
     required:true
   },
+  saved:Boolean,
   // `note` is an object that stores a Note id
   // The ref property links the ObjectId to the Note model
   // This allows us to populate the Article with an associated Note
@@ -29,6 +30,12 @@ var ArticleSchema = new Schema({
   }
 });
 
+ArticleSchema.methods.articledSaved = function() {
+  // Set the current user's `lastUpdated` property to the current date/time
+  this.saved = true;
+  // Return this new date
+  return this.articledSaved;
+};
 // This creates our model from the above schema, using mongoose's model method
 var Article = mongoose.model("Article", ArticleSchema);
 
