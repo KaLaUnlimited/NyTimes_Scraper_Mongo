@@ -18,7 +18,7 @@ var ArticleSchema = new Schema({
   },
   summary:{
     type:String,
-    required:true
+    // required:true
   },
   saved:Boolean,
   // `note` is an object that stores a Note id
