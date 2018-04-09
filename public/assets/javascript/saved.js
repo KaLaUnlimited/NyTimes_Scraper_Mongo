@@ -137,6 +137,7 @@ $(document).ready(function() {
         method: "DELETE",
         url: "/api/headlines/" + articleToDelete._id
       }).then(function(data) {
+       console.log(data)
         // If this works out, run initPage again which will rerender our list of saved articles
         if (data.ok) {
           initPage();
