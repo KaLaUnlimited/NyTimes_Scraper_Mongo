@@ -13,7 +13,6 @@ $(document).ready(function() {
     function initPage() {
       // Empty the article container, run an AJAX request for any unsaved headlines
       articleContainer.empty();
-      // $.get("/api/headlines?saved=false").then(function(data) {
       $.get("/articles").then(function(data){
 
         // If we have headlines, render them to the page
@@ -106,7 +105,7 @@ $(document).ready(function() {
       // Using a patch method to be semantic since this is an update to an existing record in our collection
       $.ajax({
         method: "PUT",
-        url: "/api/headlines",
+        url: "/saved",
         data: articleToSave
       }).then(function(data) {
         // If successful, mongoose will send back an object containing a key of "ok" with the value of 1

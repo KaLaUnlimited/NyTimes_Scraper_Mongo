@@ -54,7 +54,7 @@ app.get("/", function (req, res) {
 app.get("/articles", function (req, res) {
 
 
-  db.Article.find({}) // promise
+  db.Article.find({saved:false}) // promise
     .then(function (data) {
       // TODO
       res.json(data); // json
@@ -66,6 +66,8 @@ app.get("/articles", function (req, res) {
       res.json(err);
     })
 });
+
+
 
 
 
@@ -134,9 +136,10 @@ app.get("/scrape", function (req, res) {
 });
 
 // // Route for getting all Articles from the db
-app.get('/api/headlines?saved=false', function (req, res) {
+app.put('/saved', function (req, res) {
   // Grab every document in the Articles collection
-  db.Article.find({})
+  db.Article.update({"saved": false}, {$set: {"saved":true}})
+
     .then(function (dbArticle) {
       // If we were able to successfully find Articles, send them back to the client
       res.json(dbArticle);
