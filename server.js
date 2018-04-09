@@ -47,6 +47,14 @@ app.get("/", function (req, res) {
   res.sendFile(path.join(__dirname, "views/index.html"));
 });
 
+app.get("/saved", function (req, res) {
+  // Static Files
+  // HTML
+  // JavaScript
+  // CSS
+  res.sendFile(path.join(__dirname, "views/saved.html"));
+});
+
 
 
 
@@ -136,7 +144,7 @@ app.get("/scrape", function (req, res) {
 });
 
 // // Route for getting all Articles from the db
-app.put('/saved', function (req, res) {
+app.put('/savedArticles', function (req, res) {
   // Grab every document in the Articles collection
   db.Article.update({"saved": false}, {$set: {"saved":true}})
 
@@ -149,6 +157,23 @@ app.put('/saved', function (req, res) {
       res.json(err);
     });
 });
+
+app.get("/savedArticles", function (req, res) {
+
+
+  db.Article.find({saved:true}) // promise
+    .then(function (data) {
+      // TODO
+      res.json(data); // json
+
+      // res.json();
+    })
+    .catch(function (err) {
+      // TODO
+      res.json(err);
+    })
+});
+
 
 // // Route for grabbing a specific Article by id, populate it with it's note
 // app.get("/articles/:id", function(req, res) {

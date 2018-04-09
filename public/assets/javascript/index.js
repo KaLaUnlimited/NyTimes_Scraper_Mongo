@@ -105,7 +105,7 @@ $(document).ready(function() {
       // Using a patch method to be semantic since this is an update to an existing record in our collection
       $.ajax({
         method: "PUT",
-        url: "/saved",
+        url: '/savedArticles',
         data: articleToSave
       }).then(function(data) {
         // If successful, mongoose will send back an object containing a key of "ok" with the value of 1
